@@ -97,7 +97,7 @@ class MainActivity : Activity() {
         return EditText(this).apply {
             this.hint = hint
             setText(value)
-            singleLine = true
+            setSingleLine(true)
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
