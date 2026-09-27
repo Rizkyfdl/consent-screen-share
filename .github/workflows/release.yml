@@ -29,16 +29,19 @@ jobs:
           java-version: "17"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK packages
         run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager \
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" \
+            -type f -name sdkmanager | sort | tail -1)"
+          echo "Using SDK manager: $SDKMANAGER"
+          yes | "$SDKMANAGER" \
+            --sdk_root="$SDK_ROOT" \
+            --licenses >/dev/null || true
+          "$SDKMANAGER" \
+            --sdk_root="$SDK_ROOT" \
             "platform-tools" \
             "platforms;android-35" \
             "build-tools;35.0.0"
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
