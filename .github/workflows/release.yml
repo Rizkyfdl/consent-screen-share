@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_KEYSTORE_FILE: ${{ runner.temp }}/upload-key.jks
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
@@ -54,10 +53,12 @@ jobs:
             exit 1
           fi
           printf '%s' "$ANDROID_KEYSTORE_BASE64" \
-            | base64 --decode > "$ANDROID_KEYSTORE_FILE"
-          chmod 600 "$ANDROID_KEYSTORE_FILE"
+            | base64 --decode > "$RUNNER_TEMP/upload-key.jks"
+          chmod 600 "$RUNNER_TEMP/upload-key.jks"
 
       - name: Build signed release APKs
+        env:
+          ANDROID_KEYSTORE_FILE: ${{ runner.temp }}/upload-key.jks
         run: |
           gradle :target-app:assembleRelease :observer-app:assembleRelease \
             --no-daemon --stacktrace
