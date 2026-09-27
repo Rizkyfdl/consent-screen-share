@@ -1,0 +1,9 @@
+.gradle/
+**/build/
+local.properties
+screen-relay/node_modules/
+*.iml
+.idea/
+*.jks
+*.keystore
+upload-key.base64
